@@ -1,0 +1,3 @@
+include ':contactcard'
+include ':app'
+rootProject.name = "GuYiGu"

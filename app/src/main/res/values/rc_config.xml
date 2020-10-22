@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 设置是否支持消息撤回, true 为打开, false 为关闭-->
+    <bool name="rc_enable_message_recall">true</bool>
+    <!-- 消息撤回有效时间（单位：秒）-->
+    <integer name="rc_message_recall_interval">120</integer>
+    <!-- 消息撤回重新编辑有效时间（单位：秒）-->
+    <integer name="rc_message_recall_edit_interval">300</integer>
+    <!-- 设置是否开启消息回执, true 为打开, false 为关闭-->
+    <bool name="rc_read_receipt">true</bool>
+    <!-- 开启之后，用户在其他端上阅读过的消息，当前客户端会清掉该消息的未读数。目前仅支持单聊、群聊。true 为打开, false 为关闭-->
+    <bool name="rc_enable_sync_read_status">true</bool>
+</resources>
