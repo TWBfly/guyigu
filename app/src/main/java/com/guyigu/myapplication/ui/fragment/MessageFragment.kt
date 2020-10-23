@@ -9,16 +9,11 @@ import androidx.fragment.app.FragmentTransaction
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseFragment
+import com.guyigu.myapplication.ui.activity.AddFriendActivity
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imkit.model.UIConversation
-import io.rong.imlib.IRongCallback
-import io.rong.imlib.ISendMessageCallback
-import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
-import io.rong.imlib.model.Message
-import io.rong.message.TextMessage
-import kotlinx.android.synthetic.main.fragment_message.*
 
 
 /**
@@ -133,7 +128,13 @@ class MessageFragment : BaseFragment() {
              * @return true 拦截事件, false 执行融云 SDK 内部默认处理逻辑
              */
             override fun onConversationClick(context: Context?, view: View?, conversation: UIConversation?): Boolean {
-                LogUtils.i("==会话列表中的 Item 点击监听==view=" + view + "==conversation==" + conversation)
+                LogUtils.i("==会话列表中的 Item ==conversation==" + conversation?.uiConversationTitle+"==content=="+conversation?.conversationContent)
+                if ("测试系统消息" == conversation?.conversationContent.toString()){
+                    LogUtils.i("==会话列表中的 Item =conversation=1111111=" + conversation?.conversationTargetId)
+                    startActivity(Intent(activity,AddFriendActivity::class.java))
+                    return true
+                }
+
                 return false
             }
 

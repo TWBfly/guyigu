@@ -1,10 +1,12 @@
 package com.guyigu.myapplication
 
 import android.app.Application
+import android.content.Intent
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.startup.LogStartup
 import com.guyigu.myapplication.startup.MMKVStartup
 import com.guyigu.myapplication.startup.ToastStartup
+import com.guyigu.myapplication.ui.activity.LoginActivity
 import com.rousetime.android_startup.StartupManager
 import io.rong.imkit.RongIM
 import io.rong.imlib.RongIMClient
@@ -63,15 +65,5 @@ class MyApp : Application() {
             }
         })
 
-        RongIM.setConnectionStatusListener {
-            if (it == RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT) {
-                //当前用户账号在其他端登录，请提示用户并做出对应处理
-                LogUtils.i("当前用户账号在其他端登录，请提示用户并做出对应处理=====$it")
-            } else if (it == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONN_USER_BLOCKED) {
-                //用户被封禁，请提示用户并做出对应处理
-                LogUtils.i("用户被封禁，请提示用户并做出对应处理=====$it")
-            }
-
-        }
     }
 }

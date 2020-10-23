@@ -1,18 +1,18 @@
 package com.guyigu.myapplication.ui.activity
 
 import android.content.Intent
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseActivity
-import com.guyigu.myapplication.bean.ApplyFriendData
-import com.guyigu.myapplication.ui.adapter.ApplyAdapter
+import com.guyigu.myapplication.ui.adapter.FriendListAdapter
 import com.guyigu.myapplication.ui.viewmodel.FriendViewModel
 import com.guyigu.myapplication.util.add_friend_id
 import com.guyigu.myapplication.util.add_name
 import kotlinx.android.synthetic.main.activity_address_book.*
+import kotlinx.android.synthetic.main.activity_base.*
 
 /**
  * Created by tang on 2020/10/20
@@ -20,15 +20,16 @@ import kotlinx.android.synthetic.main.activity_address_book.*
  */
 class AddressBookActivity : BaseActivity() {
     private lateinit var mContext: AddressBookActivity
-    private lateinit var mAdapter: ApplyAdapter
+    private lateinit var mAdapter: FriendListAdapter
     val model: FriendViewModel by viewModels()
 
     override fun contentLayoutId(): Int = R.layout.activity_address_book
 
     override fun initView() {
         mContext = this
-
-        mAdapter = ApplyAdapter()
+        title_name.text = "通讯录"
+        address_book_img.visibility = View.GONE
+        mAdapter = FriendListAdapter()
         recycle_view.layoutManager = LinearLayoutManager(mContext)
         recycle_view.adapter = mAdapter
 
@@ -52,35 +53,15 @@ class AddressBookActivity : BaseActivity() {
             }
 
         })
-        getFriendApplyList()
         getFriendList()
 
-        mAdapter.setOnItemChildClickListener { adapter, view, position ->
-            if (view.id == R.id.item_agree) {
-                //审核好友
-                model.getCheckFriendApply(0, mAdapter.data[position].applyUserId).observe(mContext, {
-                    showToast(it)
-                })
-            }
-        }
+
     }
 
-    private fun getFriendList(){
-        model.getFriendList().observe(mContext,{
-            LogUtils.e("getFriendList=="+it.size)
-
-        })
-    }
-
-    /**
-     * 好友申请列表
-     */
-    private fun getFriendApplyList() {
-        //-1 已拒绝 0 待通过 1已经通过
-        model.friendApplyList(1).observe(mContext, {
+    private fun getFriendList() {
+        model.getFriendList().observe(mContext, {
             mAdapter.setNewInstance(it)
         })
-
     }
 
     override fun initDestroy() {

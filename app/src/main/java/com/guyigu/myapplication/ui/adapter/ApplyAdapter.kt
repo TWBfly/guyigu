@@ -10,8 +10,13 @@ import kotlinx.android.synthetic.main.adapter_apply.view.*
  * Created by tang on 2020/10/20
  */
 class ApplyAdapter:BaseQuickAdapter<ApplyFriendData,BaseViewHolder>(R.layout.adapter_apply) {
-    override fun convert(holder: BaseViewHolder, item: ApplyFriendData) {
+
+    init {
         addChildClickViewIds(R.id.item_agree)
+    }
+
+    override fun convert(holder: BaseViewHolder, item: ApplyFriendData) {
+
         holder.itemView.apply {
             item_name.text = item.remark
         }

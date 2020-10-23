@@ -113,5 +113,20 @@ class FriendViewModel : ViewModel() {
         return addFriendLiveData
     }
 
+    /**
+     * 测试系统消息
+     */
+    fun testMsg(): MutableLiveData<String> {
+        viewModelScope.launch {
+            api.testMsg().let {
+                if (OK == it.msg) {
+                    addFriendLiveData.postValue("系统通知发送成功")
+                } else {
+                    ToastUtils.show(it.msg)
+                }
+            }
+        }
+        return addFriendLiveData
+    }
 
 }

@@ -56,4 +56,10 @@ interface Api {
     @POST("/app/user/delFriend")
     suspend fun delFriend(@Field("userId") userId: Int):AddFriendBean
 
+    /**
+     * 测试系统消息
+     */
+    @GET("app/user/testMsg")
+    suspend fun testMsg():AddFriendBean
+
 }

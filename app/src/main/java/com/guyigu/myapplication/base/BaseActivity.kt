@@ -1,15 +1,18 @@
 package com.guyigu.myapplication.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
-import com.guyigu.myapplication.MyApp
+import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.model.db.AppDatabase
-import com.guyigu.myapplication.model.manager.AppManager
+import com.guyigu.myapplication.ui.activity.LoginActivity
 import com.gyf.immersionbar.ImmersionBar
 import com.hjq.toast.ToastUtils
 import com.tencent.mmkv.MMKV
+import io.rong.imkit.RongIM
+import io.rong.imlib.RongIMClient
 import kotlinx.android.synthetic.main.activity_base.*
 
 
@@ -30,6 +33,18 @@ abstract class BaseActivity : AppCompatActivity() {
         initView()
         initImmersionBar()
 //        AppManager.instance.addActivity(this)
+
+        RongIM.setConnectionStatusListener {
+            if (it == RongIMClient.ConnectionStatusListener.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT) {
+                //当前用户账号在其他端登录，请提示用户并做出对应处理
+                LogUtils.i("当前用户账号在其他端登录，请提示用户并做出对应处理=====$it")
+                startActivity(Intent(this,LoginActivity::class.java))
+            } else if (it == RongIMClient.ConnectionStatusListener.ConnectionStatus.CONN_USER_BLOCKED) {
+                //用户被封禁，请提示用户并做出对应处理
+                LogUtils.i("用户被封禁，请提示用户并做出对应处理=====$it")
+            }
+
+        }
     }
 
     abstract fun contentLayoutId(): Int

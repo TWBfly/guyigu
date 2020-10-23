@@ -7,8 +7,6 @@ import io.rong.imkit.DefaultExtensionModule;
 import io.rong.imkit.RongIM;
 import io.rong.imkit.plugin.DefaultLocationPlugin;
 import io.rong.imkit.plugin.IPluginModule;
-import io.rong.imkit.plugin.ImagePlugin;
-import io.rong.imkit.widget.provider.FilePlugin;
 import io.rong.imlib.model.Conversation;
 
 /**
@@ -35,6 +33,7 @@ public class MyExtensionModule extends DefaultExtensionModule {
 //                iterator.remove();
 //            }
 //        }
+
 
         // 增加扩展项, 以 ImagePlugin 为例
 //        pluginModules.add(new ImagePlugin());

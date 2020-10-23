@@ -38,10 +38,10 @@ data class ApplyFriendBean(
 
 data class ApplyFriendData(
     val id: Int = 0,
-    val applyUserId: Int = 0,
-    val acceptUserId: Int = 0,
+    val phone: String = "",
+    val name: String = "",
+    val img: String = "",
     val remark: String = "",
-    val agreeFlag: Int = 0,
 )
 
 data class MyFriendBean(
