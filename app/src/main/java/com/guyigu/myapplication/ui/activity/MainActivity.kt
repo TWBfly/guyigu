@@ -48,6 +48,7 @@ class MainActivity : BaseActivity(){
                 R.id.navigation_item2 -> {
                     title_name.text = "估一估"
                     address_book_img.visibility = View.GONE
+                    more_img.visibility = View.GONE
                     if (guyiGuFragment == null) {
                         guyiGuFragment = GuyiGuFragment()
                         FragmentUtils.add(supportFragmentManager, guyiGuFragment!!, R.id.main_frameLayout)
@@ -59,6 +60,7 @@ class MainActivity : BaseActivity(){
                 R.id.navigation_item3 -> {
                     title_name.text = "我的"
                     address_book_img.visibility = View.GONE
+                    more_img.visibility = View.GONE
                     if (myFragment == null) {
                         myFragment = MyFragment()
                         FragmentUtils.add(supportFragmentManager, myFragment!!, R.id.main_frameLayout)
@@ -78,16 +80,18 @@ class MainActivity : BaseActivity(){
             startActivity(Intent(mContext, AddressBookActivity::class.java))
         }
 
+        //选择好友
+        more_img.setOnClickListener {
+            startActivity(Intent(mContext,SelectorFriendActivity::class.java))
+        }
+
         LogUtils.e("Authorization=" + kv?.decodeString(loginToken))
     }
 
     private fun setTitle() {
         title_name.text = "聊天"
         address_book_img.visibility = View.VISIBLE
-
-        address_book_img.setOnClickListener {
-            startActivity(Intent(mContext,AddressBookActivity::class.java))
-        }
+        more_img.visibility = View.VISIBLE
     }
 
     private fun initRY() {

@@ -51,10 +51,12 @@ class AddFriendActivity : BaseActivity() {
 
     private fun addFriend() {
         model.addFriend(remark.text.toString(), friendId).observe(mContext, {
-            model.testMsg().observe(mContext, {
-                showToast(it)
-                finish()
-            })
+            showToast(it)
+            finish()
+//            model.testMsg().observe(mContext, {
+//                showToast(it)
+//                finish()
+//            })
         })
     }
 

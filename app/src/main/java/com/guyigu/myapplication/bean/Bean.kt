@@ -49,3 +49,15 @@ data class MyFriendBean(
     val msg: String = "",
     val data: MutableList<Data>?
 )
+
+data class MyGroupListBean(
+    val code: Int = 0,
+    val msg: String = "",
+    val data: MutableList<MyGroupList>
+)
+
+data class MyGroupList(
+    val groupId: Int = 0,
+    val groupName: String = "",
+    val groupManage: Boolean = false,
+)

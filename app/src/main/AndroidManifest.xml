@@ -101,6 +101,11 @@
             android:label="新的朋友"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.SelectorFriendActivity"
+            android:label="选择好友"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
 
         <meta-data

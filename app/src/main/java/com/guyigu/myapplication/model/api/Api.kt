@@ -39,7 +39,7 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("app/user/checkFriendApply")
-    suspend fun getCheckFriendApply(@Field("type") type: Int, @Field("userApplyRecordId") userApplyRecordId: Int):AddFriendBean
+    suspend fun getCheckFriendApply(@Field("type") type: Int, @Field("userApplyRecordId") userApplyRecordId: Int): AddFriendBean
 
     /**
      * 获取好友申请列表
@@ -54,12 +54,58 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("/app/user/delFriend")
-    suspend fun delFriend(@Field("userId") userId: Int):AddFriendBean
+    suspend fun delFriend(@Field("userId") userId: Int): AddFriendBean
 
     /**
      * 测试系统消息
      */
     @GET("app/user/testMsg")
-    suspend fun testMsg():AddFriendBean
+    suspend fun testMsg(): AddFriendBean
+
+    /**
+     * 创建群组
+     */
+    @FormUrlEncoded
+    @POST("app/user/addGroup")
+    suspend fun addGroup(@Field("groupName") groupName: String): AddFriendBean
+
+    /**
+     * 我的群组列表
+     */
+    @GET("app/user/getMyGroupList")
+    suspend fun getMyGroupList(): MyGroupListBean
+
+    /**
+     *解散群组
+     */
+    @FormUrlEncoded
+    @POST("/app/user/cancelGroup")
+    suspend fun cancelGroup(@Field("groupId") groupId: Int)
+
+    /**
+     *退出群组
+     */
+    @POST("app/user/exitGroup")
+    suspend fun exitGroup(@Field("groupId") groupId: Int)
+
+    /**
+     * 获取群组成员
+     */
+    @GET("app/user/getMyGroupMemberList")
+    suspend fun getMyGroupMemberList(@Field("groupId") groupId: Int)
+
+    /**
+     *加入群组,邀请别人加入
+     */
+    @FormUrlEncoded
+    @POST("app/user/joinGroup")
+    suspend fun joinGroup(@Field("groupId") groupId: Int, @Field("joinUserId ") joinUserId: Int):AddFriendBean
+
+    /**
+     * 更新群组
+     */
+    @FormUrlEncoded
+    @POST("app/user/updateGroup")
+    suspend fun updateGroup(@Field("groupId") groupId: Int, @Field("groupName ") groupName: String)
 
 }

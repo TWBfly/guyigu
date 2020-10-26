@@ -9,6 +9,7 @@ import com.guyigu.myapplication.base.BaseActivity
 import com.guyigu.myapplication.bean.ApplyFriendBean
 import com.guyigu.myapplication.ui.adapter.ApplyAdapter
 import com.guyigu.myapplication.ui.viewmodel.FriendViewModel
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_newfriend.*
 
 /**
@@ -22,6 +23,7 @@ class NewFriendActivity : BaseActivity() {
 
     override fun initView() {
         mContext = this
+        title_name.text = "新的朋友"
         new_friend_recycle.layoutManager = LinearLayoutManager(this)
         val mAdapter = ApplyAdapter()
         new_friend_recycle.adapter = mAdapter
@@ -32,7 +34,6 @@ class NewFriendActivity : BaseActivity() {
         })
 
         mAdapter.setOnItemChildClickListener { _, view, position ->
-            //审核好友
             if (view.id == R.id.item_agree) {
                 //审核好友
                 model.getCheckFriendApply(1, mAdapter.data[position].id).observe(mContext, {
