@@ -76,6 +76,21 @@
         </activity>
 
         <activity
+            android:name=".ui.activity.ConversationListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="com.guyigu.myapplication"
+                    android:pathPrefix="/conversationlist"
+                    android:scheme="rong" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
             android:name=".ui.activity.AddressBookActivity"
             android:label="通讯录"
             android:launchMode="singleTask"

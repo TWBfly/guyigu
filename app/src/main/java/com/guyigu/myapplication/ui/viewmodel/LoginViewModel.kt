@@ -7,6 +7,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.MyApp
 import com.guyigu.myapplication.model.api.ApiService
 import com.guyigu.myapplication.model.db.AppDatabase
+import com.guyigu.myapplication.model.db.entity.FriendEntity
 import com.guyigu.myapplication.model.db.entity.UserEntity
 import com.guyigu.myapplication.util.OK
 import com.guyigu.myapplication.util.loginToken
@@ -25,7 +26,9 @@ class LoginViewModel : ViewModel() {
             ApiService.instance.api.login(mapOf("userName" to name_, "passWord" to password)).let {
                 if (OK == it.msg) {
                     val userDao = AppDatabase.getInstance(MyApp.instance).userDao()
+                    val friendDao = AppDatabase.getInstance(MyApp.instance).friendDao()
                     val userEntity = UserEntity()
+                    val friendEntity = FriendEntity()
                     it.data?.apply {
                         userEntity.let { it_ ->
                             it_.id = id
@@ -35,8 +38,17 @@ class LoginViewModel : ViewModel() {
                             it_.phone = phone
                             it_.token = token
                         }
+                        friendEntity.let {friend->
+                            friend.id = id
+                            friend.img = img
+                            friend.name = name
+                            friend.pass = pass
+                            friend.phone = phone
+                        }
                     }
                     userDao.insertUsers(userEntity)
+                    friendDao.insertFriend(friendEntity)
+
                     MMKV.defaultMMKV().encode(loginToken, it.data?.token)
                     ApiService.instance.api.getToken(it.data?.token).let { it1 ->
                         if (it1.data.isBlank()) {

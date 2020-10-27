@@ -1,5 +1,7 @@
 package com.guyigu.myapplication.bean
 
+import java.io.Serializable
+
 /**
  * Created by tang on 2020/10/19
  */
@@ -60,4 +62,9 @@ data class MyGroupList(
     val groupId: Int = 0,
     val groupName: String = "",
     val groupManage: Boolean = false,
+)
+
+data class ItemClickDataBean(
+    val userId: String? = "",
+    val userName: String? = ""
 )

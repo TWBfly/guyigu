@@ -35,6 +35,9 @@ android {
         jvmTarget = '1.8'
     }
 
+    androidExtensions{
+        experimental = true
+    }
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             outputFileName = "guyigu${variant.buildType.name}_${project.name}_${defaultConfig.versionName}_${buildTime()}.apk"
@@ -85,6 +88,7 @@ dependencies {
 //    kapt 'android.arch.persistence.room:compiler:1.1.1'
     kapt 'androidx.room:room-compiler:2.2.5'
     implementation project(':contactcard')
+    implementation 'org.greenrobot:eventbus:3.2.0'
 }
 
 static def buildTime() {

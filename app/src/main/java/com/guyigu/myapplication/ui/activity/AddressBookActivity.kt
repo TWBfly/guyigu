@@ -4,13 +4,16 @@ import android.content.Intent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseActivity
+import com.guyigu.myapplication.model.db.entity.FriendEntity
 import com.guyigu.myapplication.ui.adapter.FriendListAdapter
 import com.guyigu.myapplication.ui.viewmodel.FriendViewModel
-import com.guyigu.myapplication.util.add_friend_id
-import com.guyigu.myapplication.util.add_name
+import com.guyigu.myapplication.util.*
+import io.rong.imkit.RongIM
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.activity_address_book.*
 import kotlinx.android.synthetic.main.activity_base.*
 
@@ -55,6 +58,27 @@ class AddressBookActivity : BaseActivity() {
         })
         getFriendList()
 
+        mAdapter.setOnItemClickListener { adapter, view, position ->
+            val conversationType = Conversation.ConversationType.PRIVATE;
+            val targetId = mAdapter.data[position].id.toString()
+            val title = mAdapter.data[position].name
+            val friendDao = db.friendDao()
+            val queryFriendById = friendDao.queryFriendById(mAdapter.data[position].id)
+            val friendEntity = FriendEntity()
+            mAdapter.data[position].apply {
+                friendEntity.id = id
+                friendEntity.name = name
+                friendEntity.img = img
+                friendEntity.phone = phone
+            }
+            if (queryFriendById == null) {
+                friendDao.insertFriend(friendEntity)
+            } else {
+                friendDao.updateFriend(friendEntity)
+            }
+
+            RongIM.getInstance().startConversation(mContext, conversationType, targetId, title, bundleOf(item_click_friend_id to friendEntity.id, item_click_friend_name to friendEntity.name, item_click_friend_img to friendEntity.img ))
+        }
 
     }
 

@@ -6,14 +6,18 @@ import android.net.Uri
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.blankj.utilcode.util.BusUtils
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseFragment
-import com.guyigu.myapplication.ui.activity.AddFriendActivity
+import com.guyigu.myapplication.bean.ItemClickDataBean
+import com.guyigu.myapplication.ui.activity.NewFriendActivity
+import com.guyigu.myapplication.util.itemClickData
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imkit.model.UIConversation
 import io.rong.imlib.model.Conversation
+import org.greenrobot.eventbus.EventBus
 
 
 /**
@@ -128,10 +132,10 @@ class MessageFragment : BaseFragment() {
              * @return true 拦截事件, false 执行融云 SDK 内部默认处理逻辑
              */
             override fun onConversationClick(context: Context?, view: View?, conversation: UIConversation?): Boolean {
-                LogUtils.i("==会话列表中的 Item ==conversation==" + conversation?.uiConversationTitle+"==content=="+conversation?.conversationContent)
-                if ("测试系统消息" == conversation?.conversationContent.toString()){
-                    LogUtils.i("==会话列表中的 Item =conversation=1111111=" + conversation?.conversationTargetId)
-                    startActivity(Intent(activity,AddFriendActivity::class.java))
+                EventBus.getDefault().postSticky(ItemClickDataBean(userId = conversation?.conversationTargetId, userName = conversation?.uiConversationTitle))
+                LogUtils.i("==会话列表中的 Item==conversation==" + conversation?.uiConversationTitle + "==content==" + conversation?.conversationContent + "==" + conversation?.conversationTargetId)
+                if (conversation?.conversationContent.toString().contains("添加你为好友")) {
+                    startActivity(Intent(activity, NewFriendActivity::class.java))
                     return true
                 }
 

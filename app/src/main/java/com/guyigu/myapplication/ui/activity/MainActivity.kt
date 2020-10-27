@@ -3,13 +3,18 @@ package com.guyigu.myapplication.ui.activity
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.FragmentUtils
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseActivity
+import com.guyigu.myapplication.model.db.dao.FriendDao
+import com.guyigu.myapplication.model.db.entity.FriendEntity
 import com.guyigu.myapplication.ui.fragment.GuyiGuFragment
 import com.guyigu.myapplication.ui.fragment.MessageFragment
 import com.guyigu.myapplication.ui.fragment.MyFragment
+import com.guyigu.myapplication.ui.viewmodel.FriendViewModel
 import com.guyigu.myapplication.ui.vm.MyExtensionModule
 import com.guyigu.myapplication.util.loginToken
 import com.guyigu.myapplication.util.token_
@@ -22,13 +27,15 @@ import io.rong.imlib.model.Conversation
 import io.rong.imlib.model.UserInfo
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.launch
 
 
-class MainActivity : BaseActivity(){
+class MainActivity : BaseActivity() {
     private lateinit var mContext: MainActivity
     private var myFragment: MyFragment? = null
     private var guyiGuFragment: GuyiGuFragment? = null
     private var messageFragment: MessageFragment? = null
+    val model: FriendViewModel by viewModels()
 
     override fun contentLayoutId(): Int = R.layout.activity_main
 
@@ -82,7 +89,7 @@ class MainActivity : BaseActivity(){
 
         //选择好友
         more_img.setOnClickListener {
-            startActivity(Intent(mContext,SelectorFriendActivity::class.java))
+            startActivity(Intent(mContext, SelectorFriendActivity::class.java))
         }
 
         LogUtils.e("Authorization=" + kv?.decodeString(loginToken))
@@ -114,7 +121,9 @@ class MainActivity : BaseActivity(){
 //                })
 
                 RongIM.getInstance().addUnReadMessageCountChangedObserver(
-                    { num: Int -> LogUtils.i("消息未读数量==$num") }, Conversation.ConversationType.PRIVATE,
+                    { num: Int ->
+                        LogUtils.i("消息未读数量==$num")
+                    }, Conversation.ConversationType.PRIVATE,
                     Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
                     Conversation.ConversationType.PUBLIC_SERVICE, Conversation.ConversationType.APP_PUBLIC_SERVICE
                 )
@@ -134,7 +143,23 @@ class MainActivity : BaseActivity(){
             }
         })
 
-//        setRYUserInfo()
+        val friendDao = db.friendDao()
+        model.getFriendList().observe(mContext, {
+            lifecycleScope.launch {
+                for (data in it) {
+                    val queryFriendById = friendDao.queryFriendById(data.id)
+                    if (null == queryFriendById) {
+                        val friendEntity = FriendEntity()
+                        friendEntity.id = data.id
+                        friendEntity.name = data.name
+                        friendEntity.phone = data.phone
+                        friendEntity.img = data.img
+                        friendDao.insertFriend(friendEntity)
+                    }
+                }
+                setRYUserInfo(friendDao)
+            }
+        })
 
         registerExtensionPlugin()
 
@@ -143,17 +168,21 @@ class MainActivity : BaseActivity(){
     /**
      * 设置用户信息
      */
-    private fun setRYUserInfo() {
-        val userDao = db.userDao()
+    private fun setRYUserInfo(friendDao: FriendDao) {
         RongIM.setUserInfoProvider({ userId ->
             /**
              * 获取设置用户信息. 通过返回的 userId 来封装生产用户信息.
              * @param userId 用户 ID
              */
-            LogUtils.e("userId==$userId")
-            val queryUserById = userDao.queryUserById(userId = userId.toInt())
-            LogUtils.e("queryUserById==${queryUserById?.name}")
-            UserInfo(userId, queryUserById?.name, Uri.parse(queryUserById?.img))
+
+            val queryUserById = friendDao.queryFriendById(userId = userId.toInt())
+            LogUtils.e("设置用户信息 userId==$userId==queryUserById==$queryUserById")
+            if (queryUserById != null) {
+                UserInfo(userId, queryUserById.name, Uri.parse(queryUserById.img))
+                val userInfo = UserInfo(userId, queryUserById.name, Uri.parse(queryUserById.img))
+                RongIM.getInstance().refreshUserInfoCache(userInfo)
+            }
+            null
         }, true)
 
     }

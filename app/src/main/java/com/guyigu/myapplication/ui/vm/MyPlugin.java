@@ -44,5 +44,6 @@ public class MyPlugin implements IPluginModule {
 
     @Override
     public void onActivityResult(int i, int i1, Intent intent) {
+
     }
 }

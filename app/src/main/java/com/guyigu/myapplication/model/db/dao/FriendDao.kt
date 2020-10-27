@@ -1,7 +1,7 @@
 package com.guyigu.myapplication.model.db.dao
 
 import androidx.room.*
-import com.guyigu.myapplication.model.db.entity.UserEntity
+import com.guyigu.myapplication.model.db.entity.FriendEntity
 
 
 /**
@@ -10,17 +10,17 @@ import com.guyigu.myapplication.model.db.entity.UserEntity
 @Dao
 interface FriendDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertFriend(vararg userEntities: UserEntity?)
+    fun insertFriend(vararg userEntities: FriendEntity?)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateFriend(vararg userEntities: UserEntity?): Int
+    fun updateFriend(vararg userEntities: FriendEntity?): Int
 
     @Delete
-    fun deleteFriend(vararg userEntities: UserEntity?)
+    fun deleteFriend(vararg userEntities: FriendEntity?)
 
-    @Query("SELECT * FROM users")
-    fun queryAllUsers(): List<UserEntity>?
+    @Query("SELECT * FROM friend")
+    fun queryAllUsers(): List<FriendEntity>?
 
-    @Query("SELECT * FROM users WHERE id =:userId")
-    fun queryFriendById(userId: Int): UserEntity?
+    @Query("SELECT * FROM friend WHERE id =:userId")
+    fun queryFriendById(userId: Int): FriendEntity?
 }

@@ -71,7 +71,7 @@ class SelectorFriendActivity : BaseActivity() {
         val content = "建群成功=="
 
         val conversationType = Conversation.ConversationType.GROUP
-        val targetId: String = groupId.toString()
+        val targetId = "user_group$groupId"
 
         val messageContent = TextMessage.obtain(content)
         val message = Message.obtain(targetId, conversationType, messageContent)
