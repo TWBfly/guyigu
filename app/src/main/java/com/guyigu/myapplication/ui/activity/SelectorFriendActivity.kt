@@ -52,17 +52,17 @@ class SelectorFriendActivity : BaseActivity() {
         })
 
         //创建群
-        mModel.addGroup("123456").observe(mContext, {
-            //获取我创建的群组
-            mModel.getMyGroupList().observe(mContext, {
-                val groupId = it[it.size - 1].groupId
-                //加入群组
-                mModel.joinGroup(groupId, 2).observe(mContext, {
-                    sendMessage(groupId)
-                })
-
-            })
-        })
+//        mModel.addGroup("123456").observe(mContext, {
+//            //获取我创建的群组
+//            mModel.getMyGroupList().observe(mContext, {
+//                val groupId = it[it.size - 1].groupId
+//                //加入群组
+//                mModel.joinGroup(groupId, 2).observe(mContext, {
+//                    sendMessage(groupId)
+//                })
+//
+//            })
+//        })
 
 
     }

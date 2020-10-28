@@ -4,19 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.blankj.utilcode.util.BusUtils
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseFragment
 import com.guyigu.myapplication.bean.ItemClickDataBean
 import com.guyigu.myapplication.ui.activity.NewFriendActivity
-import com.guyigu.myapplication.util.itemClickData
+import com.guyigu.myapplication.util.item_click_friend_id
+import com.guyigu.myapplication.util.item_click_friend_img
+import com.guyigu.myapplication.util.item_click_friend_name
 import io.rong.imkit.RongIM
 import io.rong.imkit.fragment.ConversationListFragment
 import io.rong.imkit.model.UIConversation
+import io.rong.imlib.IRongCallback
+import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
+import io.rong.imlib.model.Message
+import io.rong.message.TextMessage
 import org.greenrobot.eventbus.EventBus
 
 
@@ -45,46 +51,6 @@ class MessageFragment : BaseFragment() {
         val transaction: FragmentTransaction = manager.beginTransaction()
         transaction.replace(R.id.container, conversationListFragment)
         transaction.commit()
-
-//            val content = "测试123"
-//
-//            val conversationType = Conversation.ConversationType.PRIVATE
-//            val targetId = "2"
-//
-//            val messageContent = TextMessage.obtain(content)
-//            val message = Message.obtain(targetId, conversationType, messageContent);
-//            RongIM.getInstance().sendMessage(message, null, null, object : IRongCallback.ISendMessageCallback {
-//                /**
-//                 * 消息发送前回调, 回调时消息已存储数据库
-//                 * @param message 已存库的消息体
-//                 */
-//                override fun onAttached(message: Message?) {
-//                    LogUtils.w("onAttached==$message")
-//                }
-//
-//                /**
-//                 * 消息发送成功。
-//                 * @param message 发送成功后的消息体
-//                 */
-//                override fun onSuccess(message: Message?) {
-//                    LogUtils.w("onSuccess==$message")
-//                }
-//
-//                /**
-//                 * 消息发送失败
-//                 * @param message   发送失败的消息体
-//                 * @param errorCode 具体的错误
-//                 */
-//                override fun onError(message: Message?, errorCode: RongIMClient.ErrorCode?) {
-//                    LogUtils.w("onError==$message==errorCode==${errorCode?.value}"=="${errorCode?.message}")
-//                }
-//            })
-//        val conversationType: Conversation.ConversationType = Conversation.ConversationType.PRIVATE;
-//        val targetId = "接收方 ID";
-//        val title = "这里可以填写名称";
-//
-//        RongIM.getInstance().startConversation(context, conversationType, targetId, title, null)
-
 
         RongIM.setConversationListBehaviorListener(object : RongIM.ConversationListBehaviorListener {
             /**
@@ -131,11 +97,21 @@ class MessageFragment : BaseFragment() {
              * @param conversation 长按时的会话条目
              * @return true 拦截事件, false 执行融云 SDK 内部默认处理逻辑
              */
-            override fun onConversationClick(context: Context?, view: View?, conversation: UIConversation?): Boolean {
-                EventBus.getDefault().postSticky(ItemClickDataBean(userId = conversation?.conversationTargetId, userName = conversation?.uiConversationTitle))
-                LogUtils.i("==会话列表中的 Item==conversation==" + conversation?.uiConversationTitle + "==content==" + conversation?.conversationContent + "==" + conversation?.conversationTargetId)
-                if (conversation?.conversationContent.toString().contains("添加你为好友")) {
+            override fun onConversationClick(context: Context?, view: View?, conversation: UIConversation): Boolean {
+                EventBus.getDefault().postSticky(ItemClickDataBean(userId = conversation.conversationTargetId, userName = conversation.uiConversationTitle))
+                LogUtils.i("==会话列表中的 Item==conversation==" + conversation.uiConversationTitle + "==content==" + conversation.conversationContent + "==" + conversation.conversationTargetId)
+                if (conversation.conversationContent.toString().contains("添加你为好友")) {
                     startActivity(Intent(activity, NewFriendActivity::class.java))
+                    return true
+                } else if (conversation.conversationContent.toString().contains("好友验证通过")) {
+                    sendMessage(conversation.conversationTargetId)
+                    RongIM.getInstance().startConversation(
+                        activity,
+                        Conversation.ConversationType.PRIVATE,
+                        conversation.conversationTargetId,
+                        conversation.uiConversationTitle,
+                        bundleOf(item_click_friend_id to conversation.conversationTargetId, item_click_friend_name to conversation.uiConversationTitle, item_click_friend_img to conversation.iconUrl)
+                    )
                     return true
                 }
 
@@ -144,6 +120,43 @@ class MessageFragment : BaseFragment() {
 
         })
 
+    }
+
+    /**
+     * 新好友添加成功 先发条消息
+     */
+    private fun sendMessage(targetId: String) {
+        val content = "我们是好友啦，开始聊天吧！"
+        val conversationType = Conversation.ConversationType.PRIVATE
+
+        val messageContent = TextMessage.obtain(content)
+        val message = Message.obtain(targetId, conversationType, messageContent);
+        RongIM.getInstance().sendMessage(message, null, null, object : IRongCallback.ISendMessageCallback {
+            /**
+             * 消息发送前回调, 回调时消息已存储数据库
+             * @param message 已存库的消息体
+             */
+            override fun onAttached(message: Message?) {
+                LogUtils.w("onAttached==$message")
+            }
+
+            /**
+             * 消息发送成功。
+             * @param message 发送成功后的消息体
+             */
+            override fun onSuccess(message: Message?) {
+                LogUtils.w("onSuccess==$message")
+            }
+
+            /**
+             * 消息发送失败
+             * @param message   发送失败的消息体
+             * @param errorCode 具体的错误
+             */
+            override fun onError(message: Message?, errorCode: RongIMClient.ErrorCode?) {
+                LogUtils.w("onError==$message==errorCode==${errorCode?.value}" == "${errorCode?.message}")
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

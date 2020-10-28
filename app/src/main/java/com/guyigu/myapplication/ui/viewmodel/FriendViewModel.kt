@@ -107,6 +107,8 @@ class FriendViewModel : ViewModel() {
             api.delFriend(userId).let {
                 if (OK == it.msg) {
                     addFriendLiveData.postValue("删除成功")
+                }else{
+                    ToastUtils.show(it.msg)
                 }
             }
         }

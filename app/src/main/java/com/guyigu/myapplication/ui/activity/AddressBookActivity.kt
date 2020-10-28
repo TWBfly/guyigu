@@ -59,7 +59,7 @@ class AddressBookActivity : BaseActivity() {
         getFriendList()
 
         mAdapter.setOnItemClickListener { adapter, view, position ->
-            val conversationType = Conversation.ConversationType.PRIVATE;
+            val conversationType = Conversation.ConversationType.PRIVATE
             val targetId = mAdapter.data[position].id.toString()
             val title = mAdapter.data[position].name
             val friendDao = db.friendDao()
