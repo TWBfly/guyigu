@@ -24,6 +24,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.guyigu.myapplication.model.db.dao.FriendDao
 import com.guyigu.myapplication.model.db.dao.UserDao
 import com.guyigu.myapplication.model.db.entity.FriendEntity
+import com.guyigu.myapplication.model.db.entity.GroupEntity
 import com.guyigu.myapplication.model.db.entity.UserEntity
 import com.guyigu.myapplication.util.DATABASE_NAME
 import com.tencent.wcdb.database.SQLiteCipherSpec
@@ -32,7 +33,7 @@ import com.tencent.wcdb.room.db.WCDBOpenHelperFactory
 /**
  * The Room database for this app
  */
-@Database(entities = [UserEntity::class,FriendEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class,FriendEntity::class,GroupEntity::class],version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {

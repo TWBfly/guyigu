@@ -1,6 +1,8 @@
-<resources>
-    <string name="app_name">GuYiGu</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name" >GuYiGu</string>
     <string name="fragment_one">聊天</string>
     <string name="fragment_two">估一估</string>
     <string name="fragment_three">我的</string>
+    <string name="submit">确定</string>
+    <string name="dialog_title">设置群名</string>
 </resources>

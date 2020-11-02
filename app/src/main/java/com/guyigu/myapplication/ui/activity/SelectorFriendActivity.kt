@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.blankj.utilcode.util.LogUtils
 import com.guyigu.myapplication.R
 import com.guyigu.myapplication.base.BaseActivity
+import com.guyigu.myapplication.bean.Data
 import com.guyigu.myapplication.ui.adapter.FriendListAdapter
 import com.guyigu.myapplication.ui.viewmodel.FriendViewModel
 import com.guyigu.myapplication.ui.viewmodel.GroupViewModel
+import com.lxj.xpopup.XPopup
 import io.rong.imkit.RongIM
 import io.rong.imlib.IRongCallback
 import io.rong.imlib.RongIMClient
@@ -18,6 +20,7 @@ import io.rong.message.TextMessage
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_selector_friend.*
 
+
 /**
  * Created by tang on 2020/10/26
  */
@@ -26,7 +29,7 @@ class SelectorFriendActivity : BaseActivity() {
     private lateinit var mContext: SelectorFriendActivity
     val model: FriendViewModel by viewModels()
     val mModel: GroupViewModel by viewModels()
-
+    private var checkLists: MutableList<Data> = mutableListOf()
     override fun contentLayoutId(): Int = R.layout.activity_selector_friend
 
     override fun initView() {
@@ -35,11 +38,38 @@ class SelectorFriendActivity : BaseActivity() {
         title_name.text = "选择好友"
         select_friend_recycle.layoutManager = LinearLayoutManager(mContext)
         mAdapter = FriendListAdapter()
+        mAdapter.setCheckBoxShow(1)
         select_friend_recycle.adapter = mAdapter
 
         //确定发起群聊
         right_tv.setOnClickListener {
-            LogUtils.e("==确定发起群聊==")
+            XPopup.Builder(mContext).asInputConfirm("设置群名", "") { text ->
+                run {
+                    if (text.isNullOrBlank()) {
+                        showToast("请设置群名")
+                    } else {
+                        //创建群
+                        mModel.addGroup(text).observe(mContext, {
+                            //获取我创建的群组
+                            mModel.getMyGroupList().observe(mContext, {
+                                val groupId = it[it.size - 1].groupId
+                                checkLists.addAll(mAdapter.data)
+                                for (checkList in mAdapter.data) {
+                                    if (!checkList.isCheck) {
+                                        checkLists.remove(checkList)
+                                    }
+                                }
+
+                                //加入群组
+                                mModel.joinGroup(groupId, checkLists[0].id).observe(mContext, {
+                                    sendMessage(groupId)
+                                })
+
+                            })
+                        })
+                    }
+                }
+            }.show()
         }
 
         initData()
@@ -50,25 +80,10 @@ class SelectorFriendActivity : BaseActivity() {
         model.getFriendList().observe(mContext, {
             mAdapter.setNewInstance(it)
         })
-
-        //创建群
-//        mModel.addGroup("123456").observe(mContext, {
-//            //获取我创建的群组
-//            mModel.getMyGroupList().observe(mContext, {
-//                val groupId = it[it.size - 1].groupId
-//                //加入群组
-//                mModel.joinGroup(groupId, 2).observe(mContext, {
-//                    sendMessage(groupId)
-//                })
-//
-//            })
-//        })
-
-
     }
 
     private fun sendMessage(groupId: Int) {
-        val content = "建群成功=="
+        val content = "建群成功"
 
         val conversationType = Conversation.ConversationType.GROUP
         val targetId = "user_group$groupId"

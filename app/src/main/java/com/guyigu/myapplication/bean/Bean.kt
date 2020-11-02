@@ -18,6 +18,7 @@ data class Data(
     val name: String = "",
     val img: String = "",
     val token: String = "",
+    var isCheck:Boolean = false
 )
 
 

@@ -99,13 +99,13 @@ interface Api {
      */
     @FormUrlEncoded
     @POST("app/user/joinGroup")
-    suspend fun joinGroup(@Field("groupId") groupId: Int, @Field("joinUserId ") joinUserId: Int):AddFriendBean
+    suspend fun joinGroup(@Field("groupId") groupId: Int, @Field("joinUserId") joinUserId: Int):AddFriendBean
 
     /**
      * 更新群组
      */
     @FormUrlEncoded
     @POST("app/user/updateGroup")
-    suspend fun updateGroup(@Field("groupId") groupId: Int, @Field("groupName ") groupName: String)
+    suspend fun updateGroup(@Field("groupId") groupId: Int, @Field("groupName") groupName: String)
 
 }

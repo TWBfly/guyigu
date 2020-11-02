@@ -8,19 +8,13 @@ import android.net.Uri;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.guyigu.myapplication.R;
 import com.guyigu.myapplication.ui.activity.RedSetActivity;
 
 import io.rong.imkit.RongExtension;
 import io.rong.imkit.RongIM;
-import io.rong.imkit.manager.IUnReadMessageObserver;
 import io.rong.imkit.plugin.IPluginModule;
-import io.rong.imlib.IRongCallback;
-import io.rong.imlib.RongIMClient;
-import io.rong.imlib.model.Conversation;
-import io.rong.imlib.model.Message;
-import io.rong.imlib.model.UserInfo;
+import io.rong.imlib.model.Group;
 
 /**
  * Created by tang on 2020/10/19
@@ -44,6 +38,12 @@ public class MyPlugin implements IPluginModule {
 
     @Override
     public void onActivityResult(int i, int i1, Intent intent) {
-
+        RongIM.setGroupInfoProvider(new RongIM.GroupInfoProvider() {
+            @Override
+            public Group getGroupInfo(String groupId) {
+                Group groupinfo = new Group(groupId, "groupId 对应的名称", Uri.parse("groupId 对应的头像地址"));
+                return groupinfo;
+            }
+        }, true);
     }
 }

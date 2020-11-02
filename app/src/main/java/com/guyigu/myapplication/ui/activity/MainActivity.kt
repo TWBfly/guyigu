@@ -24,6 +24,7 @@ import io.rong.imkit.RongExtensionManager
 import io.rong.imkit.RongIM
 import io.rong.imlib.RongIMClient
 import io.rong.imlib.model.Conversation
+import io.rong.imlib.model.Group
 import io.rong.imlib.model.UserInfo
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -161,8 +162,21 @@ class MainActivity : BaseActivity() {
             }
         })
 
+//        setRYGroupInfo()
+
         registerExtensionPlugin()
 
+    }
+
+    /**
+     * 设置群信息
+     */
+    private fun setRYGroupInfo() {
+        RongIM.setGroupInfoProvider({ groupId ->
+            //刷新群缓存
+            //RongIM.getInstance().refreshGroupUserInfoCache(groupInfo)
+            Group(groupId, "groupId 对应的名称", Uri.parse("groupId 对应的头像地址"))
+        }, true)
     }
 
     /**
